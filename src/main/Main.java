@@ -10,11 +10,13 @@ import javax.swing.*;
 
 
 
-public class Main extends JDialog  implements HotkeyListener{
+public class Main extends JDialog  implements HotkeyListener, WindowListener{
 
+	final private String title = "Hot Translate";
 	private JTextArea textToTranslate;
 	private JButton buttonGetTranslate;
 	private JTextArea textTranslation;
+	private Boolean visible = true;
 	
 	private String requestTranslation(String text) {
 		Translate.setClientId("c62af6ab-f3ae-4100-9f5a-c69909421a98");
@@ -35,6 +37,8 @@ public class Main extends JDialog  implements HotkeyListener{
 	}
 	
 	public Main() {
+		setTitle(title);
+		addWindowListener(this);
 		getContentPane().setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
 		textToTranslate = new JTextArea();
 		buttonGetTranslate = new JButton("Translate");
@@ -59,8 +63,7 @@ public class Main extends JDialog  implements HotkeyListener{
 		});
 		
 		textTranslation.setEditable(false);
-		
-		
+				
 		add(new JScrollPane(textToTranslate));
 		add(buttonGetTranslate);
 		add(new JScrollPane(textTranslation));
@@ -71,9 +74,7 @@ public class Main extends JDialog  implements HotkeyListener{
 			System.exit(0);
 		}
 		JIntellitype.getInstance().registerHotKey(1, JIntellitype.MOD_ALT, (int)'T');
-		JIntellitype.getInstance().registerHotKey(2, JIntellitype.MOD_ALT, (int)'H');
-		//JIntellitype.getInstance().registerHotKey(3, JIntellitype.MOD_CONTROL, (int)'T');
-		//assign this class to be a HotKeyListener
+
 		JIntellitype.getInstance().addHotKeyListener(this);
 		
 		this.setSize(400,300);
@@ -81,12 +82,15 @@ public class Main extends JDialog  implements HotkeyListener{
 	}
 	
 	public void onHotKey(int ind) {
-		if (ind == 1) {
-			setVisible(true);
-			toFront();
-		} else 
-		if (ind == 2) {
-			setVisible(false);
+		if (ind==1) {
+			if (!visible) {
+				setVisible(true);
+				toFront();
+				visible = true;
+			} else { 
+				setVisible(false);
+				visible = false;
+			}
 		}
 	}
 
@@ -94,5 +98,40 @@ public class Main extends JDialog  implements HotkeyListener{
 	public void translate() {
 		textTranslation.setText(requestTranslation(textToTranslate.getText()));
 		textToTranslate.setText("");
+	}
+
+	@Override
+	public void windowActivated(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent arg0) {
+
+	}
+
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		System.exit(0);	
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent arg0) {
+		
 	}
 }
